@@ -24,7 +24,9 @@
     <menuitem id="menu_policy_root"
               name="Políticas"
               sequence="10"
-              groups="base.group_user" />
+              groups="base.group_user">
+        <field name="web_icon">politicas,static/description/icon.png</field>
+    </menuitem>
 
     <menuitem id="menu_policy_all"
               name="Todas las Políticas"
