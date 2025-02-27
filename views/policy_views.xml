@@ -29,7 +29,7 @@
                         <field name="description"/>
                         <field name="attachment_id" widget="attachment" filename="name"/>
                         <field name="authorized_user_ids" 
-                               attrs="{'invisible': [('is_confidential','=',False)]}"/>
+                               modifiers="{'invisible': [('is_confidential','=',False)]}"/>
                         <field name="state" readonly="1"/>
                     </group>
                 </sheet>
@@ -37,11 +37,14 @@
                 <!-- Botones de flujo de aprobación -->
                 <footer>
                     <button name="action_review" type="object" string="Enviar a Revisión" 
-                            states="draft" class="btn-primary"/>
+                            class="btn-primary" 
+                            modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
                     <button name="action_approve" type="object" string="Aprobar" 
-                            states="review" class="btn-primary"/>
+                            class="btn-primary" 
+                            modifiers="{'invisible': [('state', '!=', 'review')]}"/>
                     <button name="action_publish" type="object" string="Publicar" 
-                            states="approved" class="btn-primary"/>
+                            class="btn-primary" 
+                            modifiers="{'invisible': [('state', '!=', 'approved')]}"/>
                 </footer>
             </form>
         </field>
