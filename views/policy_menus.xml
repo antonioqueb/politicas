@@ -1,35 +1,5 @@
 <odoo>
-    <!-- Menú principal -->
-    <menuitem id="menu_policy_root"
-              name="Políticas"
-              sequence="10"
-              groups="base.group_user" />
-
-    <!-- Submenú: Políticas (todas) -->
-    <menuitem id="menu_policy_all"
-              name="Todas las Políticas"
-              parent="menu_policy_root"
-              action="action_policy_all"
-              sequence="10"
-              groups="group_policy_manager,group_policy_user" />
-
-    <!-- Submenú: Políticas públicas -->
-    <menuitem id="menu_policy_public"
-              name="Políticas Públicas"
-              parent="menu_policy_root"
-              action="action_policy_public"
-              sequence="20"
-              groups="base.group_user" />
-
-    <!-- Submenú: Políticas confidenciales -->
-    <menuitem id="menu_policy_confidential"
-              name="Políticas Confidenciales"
-              parent="menu_policy_root"
-              action="action_policy_confidential"
-              sequence="30"
-              groups="group_policy_manager,group_policy_user" />
-
-    <!-- Acciones (Act Windows) -->
+    <!-- Primero definimos las ACCIONES -->
     <record id="action_policy_all" model="ir.actions.act_window">
         <field name="name">Todas las Políticas</field>
         <field name="res_model">company.policy</field>
@@ -49,4 +19,31 @@
         <field name="view_mode">tree,kanban,form</field>
         <field name="domain">[('is_confidential','=',True)]</field>
     </record>
+
+    <!-- Luego definimos los MENÚS -->
+    <menuitem id="menu_policy_root"
+              name="Políticas"
+              sequence="10"
+              groups="base.group_user" />
+
+    <menuitem id="menu_policy_all"
+              name="Todas las Políticas"
+              parent="menu_policy_root"
+              action="action_policy_all"
+              sequence="10"
+              groups="group_policy_manager,group_policy_user" />
+
+    <menuitem id="menu_policy_public"
+              name="Políticas Públicas"
+              parent="menu_policy_root"
+              action="action_policy_public"
+              sequence="20"
+              groups="base.group_user" />
+
+    <menuitem id="menu_policy_confidential"
+              name="Políticas Confidenciales"
+              parent="menu_policy_root"
+              action="action_policy_confidential"
+              sequence="30"
+              groups="group_policy_manager,group_policy_user" />
 </odoo>
