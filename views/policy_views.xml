@@ -9,7 +9,7 @@
                 <field name="category"/>
                 <field name="is_confidential"/>
                 <field name="version"/>
-                <!-- Se quita la columna "state" para no mostrar el estado -->
+                <!-- Se quita "state" para no mostrar el estado -->
             </tree>
         </field>
     </record>
@@ -27,17 +27,22 @@
                         <field name="is_confidential"/>
                         <field name="version" readonly="1"/>
                         <field name="description"/>
-                        
-                        <!-- Se reemplaza attachment_id por un campo binario para subir PDF -->
+
+                        <!-- Campo binario para subir y visualizar PDF -->
                         <field name="file" filename="filename" widget="pdf_viewer"/>
-                        
-                        <field name="authorized_user_ids" 
-                               modifiers="{'invisible': [('is_confidential','=',False)]}"/>
-                        <!-- Se elimina field name="state" -->
+
+                        <!-- 
+                             Solo visible para el grupo "group_policy_manager". 
+                             Se mantiene la invisibilidad si la política NO es confidencial.
+                        -->
+                        <field name="authorized_user_ids"
+                               groups="your_module_name.group_policy_manager"
+                               modifiers="{'invisible': [('is_confidential','=',False)]}"
+                        />
+                        <!-- Se elimina field name="state" en el formulario -->
                     </group>
                 </sheet>
-
-                <!-- Se elimina por completo el footer con botones de flujo (no usamos estados) -->
+                <!-- Sin footer de botones de flujo (state) -->
             </form>
         </field>
     </record>
@@ -47,13 +52,13 @@
         <field name="name">company.policy.kanban</field>
         <field name="model">company.policy</field>
         <field name="arch" type="xml">
-            <!-- Se quita el default_group_by="state" para no agrupar por estado -->
+            <!-- Retiramos el agrupador por estado -->
             <kanban>
                 <field name="name"/>
                 <field name="category"/>
                 <field name="is_confidential"/>
                 <field name="version"/>
-                <!-- Se elimina <field name="state"/> -->
+                <!-- Se retira <field name="state"/> -->
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click">
@@ -76,10 +81,8 @@
             <search>
                 <field name="name"/>
                 <field name="category"/>
-                <filter string="Confidencial" name="is_confidential" 
-                        domain="[('is_confidential','=',True)]"/>
-                <filter string="Pública" name="not_confidential" 
-                        domain="[('is_confidential','=',False)]"/>
+                <filter string="Confidencial" name="is_confidential" domain="[('is_confidential','=',True)]"/>
+                <filter string="Pública" name="not_confidential" domain="[('is_confidential','=',False)]"/>
                 <!-- Se quitan los filtros de estado -->
             </search>
         </field>
