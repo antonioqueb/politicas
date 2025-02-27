@@ -33,10 +33,10 @@
 
                         <!-- 
                              Solo visible para el grupo "group_policy_manager". 
-                             Se mantiene la invisibilidad si la política NO es confidencial.
+                             Además, se mantiene la invisibilidad si la política NO es confidencial.
                         -->
                         <field name="authorized_user_ids"
-                               groups="your_module_name.group_policy_manager"
+                               groups="politicas.group_policy_manager"
                                modifiers="{'invisible': [('is_confidential','=',False)]}"
                         />
                         <!-- Se elimina field name="state" en el formulario -->

@@ -9,22 +9,21 @@
     <!-- GRUPOS -->
     <record id="group_policy_manager" model="res.groups">
         <field name="name">Administrador de Políticas</field>
-        <!-- Aquí usamos la nueva categoría en lugar de 'base.module_category_hr' -->
         <field name="category_id" ref="module_category_policy"/>
     </record>
 
     <record id="group_policy_user" model="res.groups">
         <field name="name">Usuario de Políticas</field>
-        <!-- Mismo cambio de referencia a la categoría personalizada -->
         <field name="category_id" ref="module_category_policy"/>
     </record>
 
-    <!-- REGLAS DE ACCESO (Record Rules) -->
-    <!-- Regla para políticas PÚBLICAS: todos los usuarios pueden leerlas -->
+    <!-- REGLAS DE ACCESO PARA USUARIOS (group_policy_user) -->
+    <!-- Políticas públicas: lectura permitida a usuarios. -->
     <record id="policy_public_rule" model="ir.rule">
-        <field name="name">Acceso a Políticas Públicas</field>
+        <field name="name">Acceso a Políticas Públicas (Usuarios)</field>
         <field name="model_id" ref="model_company_policy"/>
-        <field name="groups" eval="[(4, ref('group_policy_user')), (4, ref('group_policy_manager'))]"/>
+        <!-- Solo aplica para el grupo user, no para managers -->
+        <field name="groups" eval="[(4, ref('group_policy_user'))]"/>
         <field name="domain_force">[('is_confidential','=',False)]</field>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
@@ -32,19 +31,33 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
-    <!-- Regla para políticas CONFIDENCIALES: solo usuarios autorizados o administradores -->
+    <!-- Políticas confidenciales: usuarios solo las leen si están en authorized_user_ids. -->
     <record id="policy_confidential_rule" model="ir.rule">
-        <field name="name">Acceso a Políticas Confidenciales</field>
+        <field name="name">Acceso a Políticas Confidenciales (Usuarios)</field>
         <field name="model_id" ref="model_company_policy"/>
-        <field name="groups" eval="[(4, ref('group_policy_user')), (4, ref('group_policy_manager'))]"/>
+        <!-- Solo aplica para el grupo user, no para managers -->
+        <field name="groups" eval="[(4, ref('group_policy_user'))]"/>
         <field name="domain_force">[
             '|',
                 ('authorized_user_ids', 'in', [user.id]),
                 ('is_confidential','=',False)
-            ]</field>
+        ]</field>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- REGLA DE ACCESO TOTAL PARA ADMINISTRADORES (group_policy_manager) -->
+    <record id="policy_manager_rule" model="ir.rule">
+        <field name="name">Acceso total a Políticas (Managers)</field>
+        <field name="model_id" ref="model_company_policy"/>
+        <field name="groups" eval="[(4, ref('group_policy_manager'))]"/>
+        <!-- domain_force verdadero siempre (1=1) -->
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
     </record>
 </odoo>
