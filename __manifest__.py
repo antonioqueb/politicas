@@ -19,6 +19,7 @@ de confidencialidad, asignación de usuarios, historial de versiones y más.
         'views/policy_views.xml',
         'views/policy_menus.xml',
     ],
+    'images': ['static/description/icon.png'],
     'installable': True,
     'application': True,
     'auto_install': False,
