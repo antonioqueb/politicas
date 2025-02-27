@@ -9,7 +9,7 @@
                 <field name="category"/>
                 <field name="is_confidential"/>
                 <field name="version"/>
-                <field name="state"/>
+                <!-- Se quita la columna "state" para no mostrar el estado -->
             </tree>
         </field>
     </record>
@@ -27,25 +27,17 @@
                         <field name="is_confidential"/>
                         <field name="version" readonly="1"/>
                         <field name="description"/>
-                        <field name="attachment_id" widget="attachment" filename="name"/>
+                        
+                        <!-- Se reemplaza attachment_id por un campo binario para subir PDF -->
+                        <field name="file" filename="filename" widget="pdf_viewer"/>
+                        
                         <field name="authorized_user_ids" 
                                modifiers="{'invisible': [('is_confidential','=',False)]}"/>
-                        <field name="state" readonly="1"/>
+                        <!-- Se elimina field name="state" -->
                     </group>
                 </sheet>
 
-                <!-- Botones de flujo de aprobación -->
-                <footer>
-                    <button name="action_review" type="object" string="Enviar a Revisión" 
-                            class="btn-primary" 
-                            modifiers="{'invisible': [('state', '!=', 'draft')]}"/>
-                    <button name="action_approve" type="object" string="Aprobar" 
-                            class="btn-primary" 
-                            modifiers="{'invisible': [('state', '!=', 'review')]}"/>
-                    <button name="action_publish" type="object" string="Publicar" 
-                            class="btn-primary" 
-                            modifiers="{'invisible': [('state', '!=', 'approved')]}"/>
-                </footer>
+                <!-- Se elimina por completo el footer con botones de flujo (no usamos estados) -->
             </form>
         </field>
     </record>
@@ -55,12 +47,13 @@
         <field name="name">company.policy.kanban</field>
         <field name="model">company.policy</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="state">
+            <!-- Se quita el default_group_by="state" para no agrupar por estado -->
+            <kanban>
                 <field name="name"/>
                 <field name="category"/>
                 <field name="is_confidential"/>
                 <field name="version"/>
-                <field name="state"/>
+                <!-- Se elimina <field name="state"/> -->
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click">
@@ -87,12 +80,7 @@
                         domain="[('is_confidential','=',True)]"/>
                 <filter string="Pública" name="not_confidential" 
                         domain="[('is_confidential','=',False)]"/>
-                <group expand="0" string="Estado">
-                    <filter string="Borrador" name="state_draft" domain="[('state','=','draft')]"/>
-                    <filter string="Revisión" name="state_review" domain="[('state','=','review')]"/>
-                    <filter string="Aprobada" name="state_approved" domain="[('state','=','approved')]"/>
-                    <filter string="Publicada" name="state_published" domain="[('state','=','published')]"/>
-                </group>
+                <!-- Se quitan los filtros de estado -->
             </search>
         </field>
     </record>
