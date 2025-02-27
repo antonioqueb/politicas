@@ -1,0 +1,96 @@
+<odoo>
+    <!-- Vista en listado (tree) -->
+    <record id="view_company_policy_tree" model="ir.ui.view">
+        <field name="name">company.policy.tree</field>
+        <field name="model">company.policy</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="category"/>
+                <field name="is_confidential"/>
+                <field name="version"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista formulario (form) -->
+    <record id="view_company_policy_form" model="ir.ui.view">
+        <field name="name">company.policy.form</field>
+        <field name="model">company.policy</field>
+        <field name="arch" type="xml">
+            <form string="Política">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="category"/>
+                        <field name="is_confidential"/>
+                        <field name="version" readonly="1"/>
+                        <field name="description"/>
+                        <field name="attachment_id" widget="attachment" filename="name"/>
+                        <field name="authorized_user_ids" 
+                               attrs="{'invisible': [('is_confidential','=',False)]}"/>
+                        <field name="state" readonly="1"/>
+                    </group>
+                </sheet>
+
+                <!-- Botones de flujo de aprobación -->
+                <footer>
+                    <button name="action_review" type="object" string="Enviar a Revisión" 
+                            states="draft" class="btn-primary"/>
+                    <button name="action_approve" type="object" string="Aprobar" 
+                            states="review" class="btn-primary"/>
+                    <button name="action_publish" type="object" string="Publicar" 
+                            states="approved" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista Kanban (opcional) -->
+    <record id="view_company_policy_kanban" model="ir.ui.view">
+        <field name="name">company.policy.kanban</field>
+        <field name="model">company.policy</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="name"/>
+                <field name="category"/>
+                <field name="is_confidential"/>
+                <field name="version"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <strong><field name="name"/></strong>
+                            <div>Versión: <field name="version"/></div>
+                            <div t-if="record.is_confidential.raw_value">Confidencial</div>
+                            <div t-if="!record.is_confidential.raw_value">Pública</div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vista de búsqueda -->
+    <record id="view_company_policy_search" model="ir.ui.view">
+        <field name="name">company.policy.search</field>
+        <field name="model">company.policy</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="category"/>
+                <filter string="Confidencial" name="is_confidential" 
+                        domain="[('is_confidential','=',True)]"/>
+                <filter string="Pública" name="not_confidential" 
+                        domain="[('is_confidential','=',False)]"/>
+                <group expand="0" string="Estado">
+                    <filter string="Borrador" name="state_draft" domain="[('state','=','draft')]"/>
+                    <filter string="Revisión" name="state_review" domain="[('state','=','review')]"/>
+                    <filter string="Aprobada" name="state_approved" domain="[('state','=','approved')]"/>
+                    <filter string="Publicada" name="state_published" domain="[('state','=','published')]"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

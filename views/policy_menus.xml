@@ -1,0 +1,52 @@
+<odoo>
+    <!-- Menú principal -->
+    <menuitem id="menu_policy_root"
+              name="Políticas"
+              sequence="10"
+              groups="base.group_user" />
+
+    <!-- Submenú: políticas (todas) -->
+    <menuitem id="menu_policy_all"
+              name="Todas las Políticas"
+              parent="menu_policy_root"
+              action="action_policy_all"
+              sequence="10"
+              groups="group_policy_manager,group_policy_user" />
+
+    <!-- Submenú para políticas públicas (vista filtrada opcional) -->
+    <menuitem id="menu_policy_public"
+              name="Políticas Públicas"
+              parent="menu_policy_root"
+              action="action_policy_public"
+              sequence="20"
+              groups="base.group_user" />
+
+    <!-- Submenú para políticas confidenciales (solo para usuarios autorizados) -->
+    <menuitem id="menu_policy_confidential"
+              name="Políticas Confidenciales"
+              parent="menu_policy_root"
+              action="action_policy_confidential"
+              sequence="30"
+              groups="group_policy_manager,group_policy_user" />
+
+    <!-- Acciones -->
+    <record id="action_policy_all" model="ir.actions.act_window">
+        <field name="name">Todas las Políticas</field>
+        <field name="res_model">company.policy</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+
+    <record id="action_policy_public" model="ir.actions.act_window">
+        <field name="name">Políticas Públicas</field>
+        <field name="res_model">company.policy</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('is_confidential','=',False)]</field>
+    </record>
+
+    <record id="action_policy_confidential" model="ir.actions.act_window">
+        <field name="name">Políticas Confidenciales</field>
+        <field name="res_model">company.policy</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="domain">[('is_confidential','=',True)]</field>
+    </record>
+</odoo>
