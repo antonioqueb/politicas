@@ -3,7 +3,6 @@ from odoo import api, fields, models
 class CompanyPolicy(models.Model):
     _name = 'company.policy'
     _description = 'Company Policies'
-    _inherit = ['mail.thread']  # Opcional para seguimiento y mensajería
 
     name = fields.Char(
         string='Título de la Política',
@@ -28,7 +27,6 @@ class CompanyPolicy(models.Model):
         help='Resumen o explicación de la política'
     )
     
-    # Se elimina Many2one con ir.attachment y se reemplaza por un campo binario
     file = fields.Binary(
         string='Archivo PDF',
         help='Contenido del documento PDF'
@@ -47,8 +45,7 @@ class CompanyPolicy(models.Model):
         help='Usuarios con permiso individual para ver políticas confidenciales'
     )
 
-    # Se conserva el campo state por si lo usas internamente,
-    # pero ya no se muestra en las vistas.
+
     state = fields.Selection(
         [
             ('draft', 'Borrador'),
@@ -71,13 +68,11 @@ class CompanyPolicy(models.Model):
         Si se sube un nuevo PDF o se modifican campos relevantes,
         se incrementa el número de versión.
         """
-        # Antes se usaba 'attachment_id'; ahora comprobamos 'file'
         if 'file' in vals or 'description' in vals or 'name' in vals:
             vals['version'] = self.version + 1
         return super(CompanyPolicy, self).write(vals)
 
-    # Métodos de cambio de estado (ya no visibles en la vista, 
-    # pero se mantienen por si tu proceso interno los necesita)
+
     def action_review(self):
         self.write({'state': 'review'})
 
