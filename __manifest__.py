@@ -1,5 +1,5 @@
 {
-    'name': 'Políticas',
+    'name': 'politicas',
     'version': '1.0.0',
     'summary': 'Gestión de políticas públicas y confidenciales de la empresa',
     'description': """
