@@ -1,14 +1,12 @@
 <odoo>
-    <!-- Lista en modo jerárquico de las categorías -->
+    <!-- Lista y formulario para gestionar las categorías -->
     <record id="view_company_policy_category_tree" model="ir.ui.view">
         <field name="name">company.policy.category.tree</field>
         <field name="model">company.policy.category</field>
         <field name="arch" type="xml">
-            <!-- La clave es default_order="parent_left" para mostrar la jerarquía -->
-            <tree string="Categorías" default_order="parent_left">
+            <tree>
                 <field name="name"/>
                 <field name="parent_id"/>
-                <!-- 'complete_name' se mantiene invisible, pero es útil para búsquedas o debug -->
                 <field name="complete_name" invisible="1"/>
             </tree>
         </field>
@@ -18,7 +16,7 @@
         <field name="name">company.policy.category.form</field>
         <field name="model">company.policy.category</field>
         <field name="arch" type="xml">
-            <form string="Categoría de Política">
+            <form>
                 <sheet>
                     <group>
                         <field name="name"/>
