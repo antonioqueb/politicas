@@ -9,10 +9,17 @@ class CompanyPolicy(models.Model):
         required=True,
         help='Nombre o título de la política'
     )
-    category = fields.Char(
+
+    # CAMBIO: en lugar de usar el campo "category" tipo Char
+    #         ahora referenciamos al nuevo modelo de categoría.
+    #         Opcionalmente, si deseas conservar el campo "category"
+    #         original, puedes dejarlo pero es redundante.
+    category_id = fields.Many2one(
+        'company.policy.category',
         string='Categoría',
-        help='Categoría o etiqueta de la política (ej: Seguridad, Interna, etc.)'
+        help='Categoría o subcategoría de la política'
     )
+
     is_confidential = fields.Boolean(
         string='Confidencial',
         help='Indica si la política es confidencial o pública'
@@ -45,7 +52,14 @@ class CompanyPolicy(models.Model):
         help='Usuarios con permiso individual para ver políticas confidenciales'
     )
 
+    # Campo nuevo para sucursal:
+    branch_id = fields.Many2one(
+        'company.policy.branch',
+        string='Sucursal',
+        help='Sucursal donde aplica esta política'
+    )
 
+    # El resto de campos y lógica del modelo se mantiene
     state = fields.Selection(
         [
             ('draft', 'Borrador'),
@@ -71,7 +85,6 @@ class CompanyPolicy(models.Model):
         if 'file' in vals or 'description' in vals or 'name' in vals:
             vals['version'] = self.version + 1
         return super(CompanyPolicy, self).write(vals)
-
 
     def action_review(self):
         self.write({'state': 'review'})

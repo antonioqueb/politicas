@@ -6,10 +6,10 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
-                <field name="category"/>
+                <!-- Se reemplaza "category" por "category_id" -->
+                <field name="category_id" widget="many2one" options="{'no_create': True}"/>
                 <field name="is_confidential"/>
                 <field name="version"/>
-                <!-- Se quita "state" para no mostrar el estado -->
             </tree>
         </field>
     </record>
@@ -23,13 +23,21 @@
                 <sheet>
                     <group>
                         <field name="name"/>
-                        <field name="category"/>
+                        
+                        <!-- Nuevo uso del campo category_id -->
+                        <field name="category_id" 
+                               context="{'default_parent_id':False}"
+                               options="{'no_quick_create': True}"/>
+                        
                         <field name="is_confidential"/>
                         <field name="version" readonly="1"/>
                         <field name="description"/>
 
                         <!-- Campo binario para subir y visualizar PDF -->
                         <field name="file" filename="filename" widget="pdf_viewer"/>
+
+                        <!-- Campo nuevo para la sucursal -->
+                        <field name="branch_id" options="{'no_quick_create': True}"/>
 
                         <!-- 
                              Solo visible para el grupo "group_policy_manager". 
@@ -39,10 +47,8 @@
                                groups="politicas.group_policy_manager"
                                modifiers="{'invisible': [('is_confidential','=',False)]}"
                         />
-                        <!-- Se elimina field name="state" en el formulario -->
                     </group>
                 </sheet>
-                <!-- Sin footer de botones de flujo (state) -->
             </form>
         </field>
     </record>
@@ -52,18 +58,19 @@
         <field name="name">company.policy.kanban</field>
         <field name="model">company.policy</field>
         <field name="arch" type="xml">
-            <!-- Retiramos el agrupador por estado -->
             <kanban>
                 <field name="name"/>
-                <field name="category"/>
+                <!-- Se reemplaza "category" por "category_id" para display -->
+                <field name="category_id"/>
                 <field name="is_confidential"/>
                 <field name="version"/>
-                <!-- Se retira <field name="state"/> -->
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_global_click">
                             <strong><field name="name"/></strong>
                             <div>Versión: <field name="version"/></div>
+                            <div t-if="record.category_id.value">Categoría: <field name="category_id"/></div>
+                            <div t-if="record.branch_id.value">Sucursal: <field name="branch_id"/></div>
                             <div t-if="record.is_confidential.raw_value">Confidencial</div>
                             <div t-if="!record.is_confidential.raw_value">Pública</div>
                         </div>
@@ -80,10 +87,10 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
-                <field name="category"/>
+                <!-- Se cambia "category" por "category_id" en el filtro -->
+                <field name="category_id"/>
                 <filter string="Confidencial" name="is_confidential" domain="[('is_confidential','=',True)]"/>
                 <filter string="Pública" name="not_confidential" domain="[('is_confidential','=',False)]"/>
-                <!-- Se quitan los filtros de estado -->
             </search>
         </field>
     </record>

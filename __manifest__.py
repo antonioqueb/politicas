@@ -18,6 +18,8 @@ de confidencialidad, asignación de usuarios, historial de versiones y más.
         'security/ir.model.access.csv',
         'views/policy_views.xml',
         'views/policy_menus.xml',
+        'views/policy_category_views.xml',
+        'views/policy_branch_views.xml',
     ],
     'images': ['static/description/icon.png'],
     'installable': True,
