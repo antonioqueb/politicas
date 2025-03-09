@@ -23,7 +23,8 @@ class CompanyPolicyCategory(models.Model):
     complete_name = fields.Char(
         'Nombre Completo',
         compute='_compute_complete_name',
-        store=True
+        store=True,
+        recursive=True 
     )
 
     @api.depends('name', 'parent_id.complete_name')
