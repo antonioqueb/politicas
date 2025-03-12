@@ -6,7 +6,6 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="name"/>
-                <!-- Se reemplaza "category" por "category_id" -->
                 <field name="category_id" widget="many2one" options="{'no_create': True}"/>
                 <field name="is_confidential"/>
                 <field name="version"/>
@@ -24,7 +23,6 @@
                     <group>
                         <field name="name"/>
                         
-                        <!-- Nuevo uso del campo category_id -->
                         <field name="category_id" 
                                context="{'default_parent_id':False}"
                                options="{'no_quick_create': True}"/>
@@ -33,22 +31,26 @@
                         <field name="version" readonly="1"/>
                         <field name="description"/>
 
-                        <!-- Campo binario para subir y visualizar PDF -->
                         <field name="file" filename="filename" widget="pdf_viewer"/>
-
-                        <!-- Campo nuevo para la sucursal -->
                         <field name="branch_id" options="{'no_quick_create': True}"/>
 
-                        <!-- 
-                             Solo visible para el grupo "group_policy_manager". 
-                             Además, se mantiene la invisibilidad si la política NO es confidencial.
-                        -->
                         <field name="authorized_user_ids"
                                groups="politicas.group_policy_manager"
-                               modifiers="{'invisible': [('is_confidential','=',False)]}"
-                        />
+                               modifiers="{'invisible': [('is_confidential','=',False)]}"/>
                     </group>
                 </sheet>
+
+                <!-- Chatter de Odoo (Notas, Seguimiento, Actividades) -->
+                <!-- Se ubica debajo de los campos existentes, para todos 
+                     los miembros del grupo de política (managers y/o usuarios). -->
+                <div class="oe_chatter">
+                    <!-- El widget 'mail_thread' muestra las conversaciones y notas relacionadas -->
+                    <field name="message_ids" widget="mail_thread" 
+                           groups="politicas.group_policy_manager,politicas.group_policy_user"/>
+                    <!-- El widget 'mail_followers' muestra y administra los seguidores del registro -->
+                    <field name="message_follower_ids" widget="mail_followers"
+                           groups="politicas.group_policy_manager,politicas.group_policy_user"/>
+                </div>
             </form>
         </field>
     </record>
@@ -60,7 +62,6 @@
         <field name="arch" type="xml">
             <kanban>
                 <field name="name"/>
-                <!-- Se reemplaza "category" por "category_id" para display -->
                 <field name="category_id"/>
                 <field name="is_confidential"/>
                 <field name="version"/>
@@ -87,7 +88,6 @@
         <field name="arch" type="xml">
             <search>
                 <field name="name"/>
-                <!-- Se cambia "category" por "category_id" en el filtro -->
                 <field name="category_id"/>
                 <filter string="Confidencial" name="is_confidential" domain="[('is_confidential','=',True)]"/>
                 <filter string="Pública" name="not_confidential" domain="[('is_confidential','=',False)]"/>

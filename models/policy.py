@@ -3,17 +3,16 @@ from odoo import api, fields, models
 class CompanyPolicy(models.Model):
     _name = 'company.policy'
     _description = 'Company Policies'
+    # Se añaden las herencias para que este modelo soporte el chatter de Odoo
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(
         string='Título de la Política',
         required=True,
-        help='Nombre o título de la política'
+        help='Nombre o título de la política',
+        tracking=True  # Se habilita tracking si deseas que el nombre aparezca en las notificaciones
     )
 
-    # CAMBIO: en lugar de usar el campo "category" tipo Char
-    #         ahora referenciamos al nuevo modelo de categoría.
-    #         Opcionalmente, si deseas conservar el campo "category"
-    #         original, puedes dejarlo pero es redundante.
     category_id = fields.Many2one(
         'company.policy.category',
         string='Categoría',
@@ -22,16 +21,19 @@ class CompanyPolicy(models.Model):
 
     is_confidential = fields.Boolean(
         string='Confidencial',
-        help='Indica si la política es confidencial o pública'
+        help='Indica si la política es confidencial o pública',
+        tracking=True
     )
     version = fields.Integer(
         string='Versión',
         default=1,
-        help='Número de versión de la política'
+        help='Número de versión de la política',
+        tracking=True
     )
     description = fields.Text(
         string='Descripción',
-        help='Resumen o explicación de la política'
+        help='Resumen o explicación de la política',
+        tracking=True
     )
     
     file = fields.Binary(
@@ -52,14 +54,12 @@ class CompanyPolicy(models.Model):
         help='Usuarios con permiso individual para ver políticas confidenciales'
     )
 
-    # Campo nuevo para sucursal:
     branch_id = fields.Many2one(
         'company.policy.branch',
         string='Sucursal',
         help='Sucursal donde aplica esta política'
     )
 
-    # El resto de campos y lógica del modelo se mantiene
     state = fields.Selection(
         [
             ('draft', 'Borrador'),
