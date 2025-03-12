@@ -12,6 +12,7 @@ de confidencialidad, asignación de usuarios, historial de versiones y más.
     'license': 'AGPL-3',
     'depends': [
         'base',
+        'mail',
     ],
     'data': [
         'security/policy_security.xml',
